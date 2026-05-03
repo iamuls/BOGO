@@ -1,0 +1,641 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>BOGO — Best Offers, Great Originals</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,400&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #0b0b0f; --surface: #13131a; --surface2: #1c1c28;
+      --border: #2a2a3d; --accent: #ff4f00; --accent2: #ff8c42;
+      --text: #f0ede8; --muted: #888; --card-bg: #16161f; --radius: 16px;
+    }
+    html { scroll-behavior: smooth; }
+    body { background: var(--bg); color: var(--text); font-family: 'DM Sans', sans-serif; min-height: 100vh; overflow-x: hidden; }
+    body::before {
+      content: ''; position: fixed; inset: 0; z-index: 0; pointer-events: none; opacity: 0.35;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+    }
+
+    /* HEADER */
+    header {
+      position: sticky; top: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 clamp(1rem, 5vw, 3rem); height: 70px;
+      background: rgba(11,11,15,0.88); backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border);
+    }
+    .logo { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 1.7rem; letter-spacing: -1px; color: var(--text); text-decoration: none; display: flex; align-items: center; }
+    .logo span { color: var(--accent); }
+    .logo-badge { font-size: 0.48rem; background: var(--accent); color: #fff; padding: 2px 6px; border-radius: 4px; font-weight: 700; letter-spacing: 1px; margin-left: 5px; vertical-align: super; }
+    .header-right { display: flex; align-items: center; gap: 10px; }
+    .search-bar { display: flex; align-items: center; background: var(--surface2); border: 1px solid var(--border); border-radius: 40px; padding: 6px 14px; gap: 8px; transition: border-color 0.2s; }
+    .search-bar:focus-within { border-color: var(--accent); }
+    .search-bar input { background: none; border: none; outline: none; color: var(--text); font-family: 'DM Sans', sans-serif; font-size: 0.85rem; width: 180px; }
+    .search-bar input::placeholder { color: var(--muted); }
+    .search-bar svg { width: 15px; height: 15px; stroke: var(--muted); flex-shrink: 0; }
+    #adminLoginBtn { font-family: 'DM Sans', sans-serif; font-size: 0.78rem; font-weight: 500; background: var(--surface2); color: var(--muted); border: 1px solid var(--border); border-radius: 8px; padding: 7px 14px; cursor: pointer; transition: all 0.2s; white-space: nowrap; }
+    #adminLoginBtn:hover { color: var(--text); border-color: var(--accent); }
+
+    /* BANNER */
+    #configBanner { display: none; position: relative; z-index: 10; background: linear-gradient(90deg, rgba(255,79,0,0.14), rgba(255,140,66,0.08)); border-bottom: 1px solid rgba(255,79,0,0.28); padding: 10px clamp(1rem,5vw,3rem); font-size: 0.82rem; color: var(--accent2); align-items: center; gap: 8px; }
+    #configBanner strong { color: var(--text); }
+
+    /* HERO */
+    .hero { position: relative; z-index: 1; text-align: center; padding: clamp(3rem, 8vw, 6rem) 2rem 3rem; overflow: hidden; }
+    .hero-glow { position: absolute; top: -80px; left: 50%; transform: translateX(-50%); width: 700px; height: 400px; background: radial-gradient(ellipse, rgba(255,79,0,0.14) 0%, transparent 70%); pointer-events: none; }
+    .hero-tag { display: inline-block; background: rgba(255,79,0,0.12); color: var(--accent2); border: 1px solid rgba(255,79,0,0.28); font-size: 0.72rem; font-weight: 500; letter-spacing: 2px; padding: 5px 14px; border-radius: 20px; margin-bottom: 1.5rem; text-transform: uppercase; animation: fadeUp 0.6s ease both; }
+    .hero h1 { font-family: 'Syne', sans-serif; font-size: clamp(2.4rem, 7vw, 5rem); font-weight: 800; line-height: 1.05; letter-spacing: -2px; animation: fadeUp 0.6s 0.1s ease both; }
+    .hero h1 em { font-style: normal; background: linear-gradient(135deg, var(--accent), var(--accent2)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+    .hero p { margin-top: 1rem; color: var(--muted); font-size: 1.05rem; max-width: 460px; margin-inline: auto; animation: fadeUp 0.6s 0.2s ease both; }
+    .hero-stats { margin-top: 2rem; display: flex; align-items: center; justify-content: center; gap: 2rem; animation: fadeUp 0.6s 0.3s ease both; }
+    .stat { text-align: center; }
+    .stat-num { font-family: 'Syne', sans-serif; font-size: 1.5rem; font-weight: 800; color: var(--accent); }
+    .stat-label { font-size: 0.72rem; color: var(--muted); margin-top: 2px; }
+    .stat-divider { width: 1px; height: 36px; background: var(--border); }
+    @keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+    /* FILTER */
+    .filter-bar { position: relative; z-index: 1; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; padding: 0 clamp(1rem, 5vw, 3rem) 1.5rem; }
+    .filter-label { font-size: 0.82rem; color: var(--muted); }
+    .filter-label strong { color: var(--text); }
+    .sort-select { background: var(--surface2); color: var(--text); border: 1px solid var(--border); border-radius: 8px; padding: 6px 12px; font-family: 'DM Sans', sans-serif; font-size: 0.82rem; cursor: pointer; outline: none; }
+
+    /* GRID */
+    .products-section { position: relative; z-index: 1; padding: 0 clamp(1rem, 5vw, 3rem) 5rem; }
+    #productsGrid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 24px; }
+
+    /* CARD */
+    .product-card { background: var(--card-bg); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; display: flex; flex-direction: column; transition: transform 0.3s, border-color 0.3s, box-shadow 0.3s; animation: cardIn 0.5s ease both; }
+    .product-card:hover { transform: translateY(-6px); border-color: rgba(255,79,0,0.38); box-shadow: 0 20px 50px rgba(255,79,0,0.09); }
+    @keyframes cardIn { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: translateY(0); } }
+    .card-img-wrap { position: relative; width: 100%; aspect-ratio: 1/1; overflow: hidden; background: var(--surface2); }
+    .card-img-wrap img { width: 100%; height: 100%; object-fit: contain; padding: 16px; transition: transform 0.4s; }
+    .product-card:hover .card-img-wrap img { transform: scale(1.06); }
+    .card-badge { position: absolute; top: 10px; left: 10px; background: var(--accent); color: #fff; font-size: 0.63rem; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; padding: 3px 8px; border-radius: 6px; }
+    .card-body { padding: 16px 18px 18px; display: flex; flex-direction: column; flex: 1; }
+    .card-name { font-family: 'Syne', sans-serif; font-size: 0.95rem; font-weight: 600; line-height: 1.35; color: var(--text); flex: 1; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+    .card-footer { display: flex; align-items: center; justify-content: space-between; margin-top: 14px; }
+    .card-price { font-family: 'Syne', sans-serif; font-size: 1.3rem; font-weight: 800; color: var(--accent); }
+    .btn-buy { font-family: 'DM Sans', sans-serif; font-size: 0.82rem; font-weight: 600; background: linear-gradient(135deg, var(--accent), var(--accent2)); color: #fff; border: none; border-radius: 10px; padding: 9px 18px; cursor: pointer; text-decoration: none; display: inline-flex; align-items: center; gap: 6px; transition: opacity 0.2s, transform 0.15s; }
+    .btn-buy:hover { opacity: 0.85; transform: scale(0.97); }
+    .btn-buy svg { width: 13px; height: 13px; }
+
+    /* STATES */
+    .empty-state { grid-column: 1/-1; text-align: center; padding: 5rem 2rem; }
+    .empty-state .icon { font-size: 3rem; margin-bottom: 1rem; }
+    .empty-state p { color: var(--muted); font-size: 1rem; }
+    .spinner { width: 36px; height: 36px; border-radius: 50%; border: 3px solid var(--border); border-top-color: var(--accent); animation: spin 0.7s linear infinite; margin: 0 auto 1rem; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* OVERLAYS */
+    .overlay { display: none; position: fixed; inset: 0; z-index: 200; background: rgba(0,0,0,0.78); backdrop-filter: blur(8px); align-items: center; justify-content: center; padding: 1rem; }
+    .overlay.active { display: flex; }
+    .modal { background: var(--surface); border: 1px solid var(--border); border-radius: 20px; width: 100%; max-width: 420px; padding: 2rem; animation: modalIn 0.3s cubic-bezier(0.34,1.56,0.64,1) both; position: relative; max-height: 92vh; overflow-y: auto; }
+    .modal::-webkit-scrollbar { width: 4px; }
+    .modal::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+    @keyframes modalIn { from { opacity: 0; transform: scale(0.88) translateY(20px); } to { opacity: 1; transform: scale(1) translateY(0); } }
+    .modal-close { position: absolute; top: 16px; right: 16px; background: var(--surface2); border: 1px solid var(--border); color: var(--muted); width: 32px; height: 32px; border-radius: 50%; cursor: pointer; font-size: 1.1rem; display: flex; align-items: center; justify-content: center; transition: color 0.2s, border-color 0.2s; }
+    .modal-close:hover { color: var(--text); border-color: var(--accent); }
+    .modal h2 { font-family: 'Syne', sans-serif; font-size: 1.4rem; font-weight: 800; margin-bottom: 0.25rem; }
+    .modal-sub { color: var(--muted); font-size: 0.85rem; margin-bottom: 1.5rem; }
+
+    /* FORM */
+    .form-group { margin-bottom: 1rem; }
+    .form-group label { display: block; font-size: 0.76rem; font-weight: 500; color: var(--muted); margin-bottom: 6px; letter-spacing: 0.5px; text-transform: uppercase; }
+    .form-group input { width: 100%; padding: 10px 14px; background: var(--surface2); border: 1px solid var(--border); border-radius: 10px; color: var(--text); font-family: 'DM Sans', sans-serif; font-size: 0.92rem; outline: none; transition: border-color 0.2s; }
+    .form-group input:focus { border-color: var(--accent); }
+    .form-group input.error { border-color: #e0054a; }
+    .btn-primary { width: 100%; padding: 12px; background: linear-gradient(135deg, var(--accent), var(--accent2)); color: #fff; border: none; border-radius: 12px; font-family: 'Syne', sans-serif; font-size: 1rem; font-weight: 700; cursor: pointer; transition: opacity 0.2s, transform 0.15s; margin-top: 0.5rem; display: flex; align-items: center; justify-content: center; gap: 8px; }
+    .btn-primary:hover:not(:disabled) { opacity: 0.88; transform: scale(0.98); }
+    .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
+    .msg { border-radius: 8px; padding: 9px 12px; font-size: 0.82rem; margin-bottom: 1rem; display: none; line-height: 1.5; }
+    .msg.err  { background: rgba(220,0,50,0.1); color: #ff4d6d; border: 1px solid rgba(220,0,50,0.3); }
+    .msg.ok   { background: rgba(0,220,100,0.1); color: #2de08a; border: 1px solid rgba(0,220,100,0.3); }
+    .msg.info { background: rgba(255,140,66,0.1); color: var(--accent2); border: 1px solid rgba(255,140,66,0.3); }
+
+    /* ADMIN */
+    .admin-modal { max-width: 520px; }
+    .admin-header { display: flex; align-items: center; gap: 10px; margin-bottom: 0.25rem; }
+    .admin-dot { width: 10px; height: 10px; background: var(--accent); border-radius: 50%; box-shadow: 0 0 8px var(--accent); animation: pulse 1.5s infinite; }
+    @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
+    .admin-tabs { display: flex; gap: 4px; margin-bottom: 1.25rem; }
+    .tab-btn { flex: 1; padding: 8px; border-radius: 8px; border: 1px solid var(--border); background: var(--surface2); color: var(--muted); font-family: 'DM Sans', sans-serif; font-size: 0.82rem; cursor: pointer; transition: all 0.2s; }
+    .tab-btn.active { background: var(--accent); border-color: var(--accent); color: #fff; }
+    .tab-pane { display: none; }
+    .tab-pane.active { display: block; }
+
+    /* CONFIG STEPS */
+    .config-step { background: var(--surface2); border: 1px solid var(--border); border-radius: 10px; padding: 12px 14px; margin-bottom: 10px; }
+    .config-step-num { font-family: 'Syne', sans-serif; font-size: 0.68rem; font-weight: 700; color: var(--accent); letter-spacing: 1px; text-transform: uppercase; margin-bottom: 4px; }
+    .config-step p { font-size: 0.82rem; color: var(--muted); line-height: 1.55; }
+    .config-step code { background: var(--bg); color: var(--accent2); padding: 1px 6px; border-radius: 4px; font-size: 0.79rem; font-family: monospace; word-break: break-all; }
+    .config-step a { color: var(--accent); }
+
+    /* MANAGE LIST */
+    .section-title { font-family: 'Syne', sans-serif; font-size: 0.78rem; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--muted); margin: 1.25rem 0 0.75rem; }
+    .admin-product-list { max-height: 260px; overflow-y: auto; border: 1px solid var(--border); border-radius: 10px; }
+    .admin-product-list::-webkit-scrollbar { width: 4px; }
+    .admin-product-list::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+    .admin-product-item { display: flex; align-items: center; gap: 12px; padding: 10px 14px; border-bottom: 1px solid var(--border); font-size: 0.83rem; }
+    .admin-product-item:last-child { border-bottom: none; }
+    .admin-product-item img { width: 36px; height: 36px; object-fit: contain; border-radius: 6px; background: var(--surface2); flex-shrink: 0; }
+    .admin-product-info { flex: 1; min-width: 0; }
+    .admin-product-info .name { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-weight: 500; }
+    .admin-product-info .price { color: var(--accent); font-size: 0.78rem; }
+    .btn-delete { background: rgba(220,0,50,0.1); color: #ff4d6d; border: 1px solid rgba(220,0,50,0.2); border-radius: 6px; padding: 4px 10px; font-size: 0.72rem; cursor: pointer; transition: background 0.2s; flex-shrink: 0; }
+    .btn-delete:hover { background: rgba(220,0,50,0.22); }
+
+    /* TOAST */
+    #toast { position: fixed; bottom: 2rem; left: 50%; transform: translateX(-50%); background: var(--surface2); border: 1px solid var(--border); color: var(--text); padding: 10px 22px; border-radius: 40px; font-size: 0.85rem; z-index: 999; opacity: 0; pointer-events: none; transition: opacity 0.3s, transform 0.3s; white-space: nowrap; }
+    #toast.show { opacity: 1; transform: translateX(-50%) translateY(-4px); }
+
+    /* FOOTER */
+    footer { position: relative; z-index: 1; border-top: 1px solid var(--border); text-align: center; padding: 2rem; font-size: 0.8rem; color: var(--muted); }
+
+    @media (max-width: 600px) {
+      .search-bar { display: none; }
+      #productsGrid { grid-template-columns: repeat(auto-fill, minmax(155px, 1fr)); gap: 14px; }
+      .hero-stats { gap: 1rem; }
+      .stat-num { font-size: 1.1rem; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <a class="logo" href="#">B<span>O</span>GO<span class="logo-badge">DEALS</span></a>
+  <div class="header-right">
+    <div class="search-bar">
+      <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+      </svg>
+      <input type="text" id="searchInput" placeholder="Search products…"/>
+    </div>
+    <button id="adminLoginBtn">⚙ Admin</button>
+  </div>
+</header>
+
+<div id="configBanner">
+  ⚠ &nbsp;<strong>Setup needed:</strong>&nbsp; Open Admin → ⚙ Config tab and paste your Google Sheets credentials.
+</div>
+
+<section class="hero">
+  <div class="hero-glow"></div>
+  <div class="hero-tag">🔥 Best Offers, Great Originals</div>
+  <h1>Discover <em>Deals</em><br/>Worth Talking About</h1>
+  <p>Handpicked top products from Amazon — curated for quality and value.</p>
+  <div class="hero-stats">
+    <div class="stat"><div class="stat-num" id="statCount">—</div><div class="stat-label">Products</div></div>
+    <div class="stat-divider"></div>
+    <div class="stat"><div class="stat-num">100%</div><div class="stat-label">Verified Links</div></div>
+    <div class="stat-divider"></div>
+    <div class="stat"><div class="stat-num">Free</div><div class="stat-label">No Sign-up</div></div>
+  </div>
+</section>
+
+<div class="filter-bar">
+  <div class="filter-label">Showing <strong id="countLabel">—</strong> products</div>
+  <select class="sort-select" id="sortSelect">
+    <option value="default">Sort: Default</option>
+    <option value="price-asc">Price: Low → High</option>
+    <option value="price-desc">Price: High → Low</option>
+    <option value="name-asc">Name: A–Z</option>
+  </select>
+</div>
+
+<section class="products-section">
+  <div id="productsGrid">
+    <div class="empty-state"><div class="spinner"></div><p>Loading products…</p></div>
+  </div>
+</section>
+
+<footer><p>© 2025 <strong>BOGO</strong> — Affiliate product showcase. Prices &amp; availability may vary.</p></footer>
+
+<!-- LOGIN -->
+<div class="overlay" id="loginOverlay">
+  <div class="modal">
+    <button class="modal-close" onclick="closeLogin()">✕</button>
+    <h2>Admin Access</h2>
+    <p class="modal-sub">Enter your password to manage products.</p>
+    <div class="msg err" id="loginErr">Incorrect password. Try again.</div>
+    <div class="form-group">
+      <label>Password</label>
+      <input type="password" id="passwordInput" placeholder="••••••••" onkeydown="if(event.key==='Enter')doLogin()"/>
+    </div>
+    <button class="btn-primary" onclick="doLogin()">Unlock Admin Panel</button>
+  </div>
+</div>
+
+<!-- ADMIN -->
+<div class="overlay" id="adminOverlay">
+  <div class="modal admin-modal">
+    <button class="modal-close" onclick="closeAdmin()">✕</button>
+    <div class="admin-header"><div class="admin-dot"></div><h2>Admin Panel</h2></div>
+    <p class="modal-sub">Manage product listings — synced live to Google Sheets.</p>
+
+    <div class="admin-tabs">
+      <button class="tab-btn active" onclick="switchTab('add',this)">➕ Add</button>
+      <button class="tab-btn"       onclick="switchTab('manage',this)">📋 Manage</button>
+      <button class="tab-btn"       onclick="switchTab('config',this)">⚙ Config</button>
+    </div>
+
+    <!-- ADD -->
+    <div class="tab-pane active" id="tab-add">
+      <div class="msg err" id="addErr"></div>
+      <div class="msg ok"  id="addOk">✓ Product added and synced to Google Sheets!</div>
+      <div class="form-group"><label>Product Name</label><input type="text" id="pName" placeholder="e.g. boAt Rockerz 450 Headphones"/></div>
+      <div class="form-group"><label>Price</label><input type="text" id="pPrice" placeholder="e.g. ₹1,299"/></div>
+      <div class="form-group"><label>Image URL</label><input type="url" id="pImage" placeholder="https://example.com/image.jpg"/></div>
+      <div class="form-group"><label>Product Link (Amazon)</label><input type="url" id="pLink" placeholder="https://www.amazon.in/dp/…"/></div>
+      <button class="btn-primary" id="addBtn" onclick="addProduct()"><span id="addBtnTxt">Save &amp; Sync →</span></button>
+    </div>
+
+    <!-- MANAGE -->
+    <div class="tab-pane" id="tab-manage">
+      <div class="msg info" style="display:block">Products are loaded live from Google Sheets. Delete removes the row permanently.</div>
+      <p class="section-title">Products (<span id="manageCount">0</span>)</p>
+      <div class="admin-product-list" id="adminProductList"></div>
+    </div>
+
+    <!-- CONFIG -->
+    <div class="tab-pane" id="tab-config">
+      <div class="msg ok" id="configSaved">✓ Config saved! Reloading products from Google Sheets…</div>
+
+      <div class="config-step">
+        <div class="config-step-num">Step 1 — Create your Google Sheet</div>
+        <p>Go to <a href="https://sheets.google.com" target="_blank">sheets.google.com</a>, create a new sheet. In <strong>Row 1</strong> add exactly these 4 headers:<br/><br/>
+        <code>name</code> &nbsp; <code>price</code> &nbsp; <code>image</code> &nbsp; <code>link</code></p>
+      </div>
+
+      <div class="config-step">
+        <div class="config-step-num">Step 2 — Make it public (read)</div>
+        <p>Click <strong>Share</strong> → <strong>Anyone with the link</strong> → <strong>Viewer</strong>. This lets your site read products without login.</p>
+      </div>
+
+      <div class="config-step">
+        <div class="config-step-num">Step 3 — Get your Spreadsheet ID</div>
+        <p>Copy the ID from your sheet's URL:<br/>
+        <code>docs.google.com/spreadsheets/d/<strong>COPY_THIS_PART</strong>/edit</code></p>
+      </div>
+
+      <div class="config-step">
+        <div class="config-step-num">Step 4 — Get a free API Key</div>
+        <p>
+          1. Go to <a href="https://console.cloud.google.com/" target="_blank">console.cloud.google.com</a><br/>
+          2. Create a project → Enable <strong>Google Sheets API</strong><br/>
+          3. Go to <strong>APIs &amp; Services → Credentials → Create API Key</strong><br/>
+          4. Restrict the key to <strong>Google Sheets API</strong> only (recommended)
+        </p>
+      </div>
+
+      <div class="config-step">
+        <div class="config-step-num">Step 5 — Paste below &amp; save</div>
+        <p>Your credentials are stored only in your browser (localStorage) and never sent anywhere except Google's own API.</p>
+      </div>
+
+      <div class="form-group" style="margin-top:1rem">
+        <label>Spreadsheet ID</label>
+        <input type="text" id="cfgSheetId" placeholder="1BxiMVs0XRA5nFMdKvBdBZjgmUUqptlbs74OgVE2upms"/>
+      </div>
+      <div class="form-group">
+        <label>Google Sheets API Key</label>
+        <input type="text" id="cfgApiKey" placeholder="AIzaSy…"/>
+      </div>
+      <div class="form-group">
+        <label>Sheet / Tab Name (default: Sheet1)</label>
+        <input type="text" id="cfgSheetName" placeholder="Sheet1"/>
+      </div>
+      <button class="btn-primary" onclick="saveConfig()">Save &amp; Connect</button>
+    </div>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+// ════════════════════════════════════════════
+//  CONSTANTS
+// ════════════════════════════════════════════
+const ADMIN_PASS = 'Bala@2009';
+const CFG_KEY    = 'bogo_config_v2';
+const CACHE_KEY  = 'bogo_cache_v2';
+
+// ════════════════════════════════════════════
+//  CONFIG
+// ════════════════════════════════════════════
+let cfg = {};
+function loadCfg() {
+  try { cfg = JSON.parse(localStorage.getItem(CFG_KEY)) || {}; } catch { cfg = {}; }
+}
+function saveCfg() { localStorage.setItem(CFG_KEY, JSON.stringify(cfg)); }
+
+// ════════════════════════════════════════════
+//  PRODUCTS STATE
+// ════════════════════════════════════════════
+let products = [];
+
+// ════════════════════════════════════════════
+//  GOOGLE SHEETS HELPERS
+// ════════════════════════════════════════════
+function sheetRange() { return encodeURIComponent(`${cfg.sheetName || 'Sheet1'}!A:D`); }
+function sheetsReadUrl() {
+  return `https://sheets.googleapis.com/v4/spreadsheets/${cfg.sheetId}/values/${sheetRange()}?key=${cfg.apiKey}`;
+}
+function sheetsAppendUrl() {
+  return `https://sheets.googleapis.com/v4/spreadsheets/${cfg.sheetId}/values/${sheetRange()}:append?valueInputOption=RAW&insertDataOption=INSERT_ROWS&key=${cfg.apiKey}`;
+}
+function sheetsBatchUrl() {
+  return `https://sheets.googleapis.com/v4/spreadsheets/${cfg.sheetId}:batchUpdate?key=${cfg.apiKey}`;
+}
+function sheetsMeta() {
+  return `https://sheets.googleapis.com/v4/spreadsheets/${cfg.sheetId}?key=${cfg.apiKey}`;
+}
+
+// READ all products from sheet
+async function fetchFromSheet() {
+  const res  = await fetch(sheetsReadUrl());
+  if (!res.ok) { const e = await res.json(); throw new Error(e.error?.message || `HTTP ${res.status}`); }
+  const data = await res.json();
+  const rows = (data.values || []).slice(1); // skip header
+  return rows.filter(r => r && r[0]).map(r => ({
+    name:  r[0] || '', price: r[1] || '', image: r[2] || '', link: r[3] || ''
+  }));
+}
+
+// APPEND one product row
+async function appendToSheet(p) {
+  const body = { values: [[p.name, p.price, p.image, p.link]] };
+  const res  = await fetch(sheetsAppendUrl(), {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(body)
+  });
+  if (!res.ok) { const e = await res.json(); throw new Error(e.error?.message || 'Append failed'); }
+}
+
+// DELETE a row by 0-based product index (maps to sheet row = index + 2)
+async function deleteFromSheet(idx) {
+  // Get the numeric sheet gid first
+  const metaRes = await fetch(sheetsMeta());
+  if (!metaRes.ok) throw new Error('Could not fetch sheet metadata');
+  const meta = await metaRes.json();
+  const sheetName = cfg.sheetName || 'Sheet1';
+  const sheetObj  = meta.sheets.find(s => s.properties.title === sheetName);
+  if (!sheetObj) throw new Error(`Tab "${sheetName}" not found in spreadsheet`);
+  const gid = sheetObj.properties.sheetId;
+
+  const sheetRow = idx + 1; // +1 for header, +1 for 1-based → 0-based: idx+2-1 = idx+1
+  const body = {
+    requests: [{
+      deleteDimension: {
+        range: { sheetId: gid, dimension: 'ROWS', startIndex: sheetRow, endIndex: sheetRow + 1 }
+      }
+    }]
+  };
+  const res = await fetch(sheetsBatchUrl(), {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(body)
+  });
+  if (!res.ok) { const e = await res.json(); throw new Error(e.error?.message || 'Delete failed'); }
+}
+
+// ════════════════════════════════════════════
+//  LOAD & RENDER
+// ════════════════════════════════════════════
+async function init() {
+  loadCfg();
+  if (!cfg.sheetId || !cfg.apiKey) {
+    document.getElementById('configBanner').style.display = 'flex';
+    renderGrid([]);
+    return;
+  }
+  // Optimistic: paint cache immediately
+  const cached = localStorage.getItem(CACHE_KEY);
+  if (cached) { products = JSON.parse(cached); renderGrid(products); }
+
+  try {
+    products = await fetchFromSheet();
+    localStorage.setItem(CACHE_KEY, JSON.stringify(products));
+    renderGrid(products);
+    document.getElementById('configBanner').style.display = 'none';
+  } catch (e) {
+    console.error('Sheets load error:', e);
+    if (!products.length) renderGrid([]);
+    showToast('⚠ ' + e.message);
+  }
+}
+
+function renderGrid(list) {
+  const q    = document.getElementById('searchInput').value.trim().toLowerCase();
+  const sort = document.getElementById('sortSelect').value;
+
+  let filtered = list.filter(p =>
+    p.name.toLowerCase().includes(q) || p.price.toLowerCase().includes(q)
+  );
+  if (sort === 'price-asc')  filtered.sort((a,b) => toNum(a.price) - toNum(b.price));
+  if (sort === 'price-desc') filtered.sort((a,b) => toNum(b.price) - toNum(a.price));
+  if (sort === 'name-asc')   filtered.sort((a,b) => a.name.localeCompare(b.name));
+
+  document.getElementById('countLabel').textContent = filtered.length;
+  document.getElementById('statCount').textContent  = list.length;
+
+  const grid = document.getElementById('productsGrid');
+  if (!filtered.length) {
+    grid.innerHTML = `<div class="empty-state">
+      <div class="icon">${q ? '🔍' : (!cfg.sheetId ? '⚙' : '🛍️')}</div>
+      <p>${q ? 'No products match your search.' : (!cfg.sheetId ? 'Go to Admin → ⚙ Config to connect Google Sheets.' : 'No products yet. Add some via Admin → ➕ Add.')}</p>
+    </div>`;
+    return;
+  }
+
+  grid.innerHTML = filtered.map((p,i) => `
+    <div class="product-card" style="animation-delay:${Math.min(i*0.05,0.4)}s">
+      <div class="card-img-wrap">
+        <img src="${x(p.image)}" alt="${x(p.name)}"
+             onerror="this.src='https://placehold.co/400x400/16161f/555?text=No+Image'" loading="lazy"/>
+        <div class="card-badge">HOT</div>
+      </div>
+      <div class="card-body">
+        <div class="card-name">${x(p.name)}</div>
+        <div class="card-footer">
+          <div class="card-price">${x(p.price)}</div>
+          <a class="btn-buy" href="${x(p.link)}" target="_blank" rel="noopener noreferrer">
+            Buy Now
+            <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>
+            </svg>
+          </a>
+        </div>
+      </div>
+    </div>`).join('');
+}
+
+function toNum(s){ return parseFloat(String(s).replace(/[^0-9.]/g,''))||0; }
+function x(s){ return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;'); }
+function isUrl(s){ try{ new URL(s); return true; }catch{ return false; } }
+
+document.getElementById('searchInput').addEventListener('input', ()=>renderGrid(products));
+document.getElementById('sortSelect').addEventListener('change', ()=>renderGrid(products));
+
+// ════════════════════════════════════════════
+//  LOGIN
+// ════════════════════════════════════════════
+document.getElementById('adminLoginBtn').onclick = () => {
+  document.getElementById('loginOverlay').classList.add('active');
+  document.getElementById('passwordInput').value = '';
+  document.getElementById('loginErr').style.display = 'none';
+  setTimeout(()=>document.getElementById('passwordInput').focus(), 80);
+};
+function closeLogin(){ document.getElementById('loginOverlay').classList.remove('active'); }
+document.getElementById('loginOverlay').addEventListener('click', e=>{ if(e.target===e.currentTarget) closeLogin(); });
+
+function doLogin(){
+  if(document.getElementById('passwordInput').value === ADMIN_PASS){
+    closeLogin(); openAdmin();
+  } else {
+    document.getElementById('loginErr').style.display='block';
+    const inp = document.getElementById('passwordInput');
+    inp.classList.add('error');
+    setTimeout(()=>inp.classList.remove('error'),600);
+  }
+}
+
+// ════════════════════════════════════════════
+//  ADMIN PANEL
+// ════════════════════════════════════════════
+function openAdmin(){
+  loadCfg();
+  document.getElementById('cfgSheetId').value   = cfg.sheetId   || '';
+  document.getElementById('cfgApiKey').value    = cfg.apiKey    || '';
+  document.getElementById('cfgSheetName').value = cfg.sheetName || 'Sheet1';
+  document.getElementById('adminOverlay').classList.add('active');
+  switchTab('add', document.querySelector('.tab-btn'));
+  renderAdminList();
+}
+function closeAdmin(){ document.getElementById('adminOverlay').classList.remove('active'); }
+document.getElementById('adminOverlay').addEventListener('click', e=>{ if(e.target===e.currentTarget) closeAdmin(); });
+
+function switchTab(name, btn){
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+  document.querySelectorAll('.tab-pane').forEach(p=>p.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('tab-'+name).classList.add('active');
+  if(name==='manage') renderAdminList();
+}
+
+// ─── ADD ──────────────────────────────────
+async function addProduct(){
+  const name  = document.getElementById('pName').value.trim();
+  const price = document.getElementById('pPrice').value.trim();
+  const image = document.getElementById('pImage').value.trim();
+  const link  = document.getElementById('pLink').value.trim();
+
+  hide('addErr'); hide('addOk');
+
+  if(!name||!price||!image||!link)       return showM('addErr','Please fill in all fields.');
+  if(!isUrl(image))                       return showM('addErr','Please enter a valid Image URL (must start with https://).');
+  if(!isUrl(link))                        return showM('addErr','Please enter a valid Product Link URL.');
+  if(!cfg.sheetId||!cfg.apiKey)           return showM('addErr','⚙ Configure Google Sheets in the Config tab first.');
+
+  setBtnLoading(true);
+  try {
+    await appendToSheet({name,price,image,link});
+    products.unshift({name,price,image,link});
+    localStorage.setItem(CACHE_KEY, JSON.stringify(products));
+    renderGrid(products);
+    renderAdminList();
+    ['pName','pPrice','pImage','pLink'].forEach(id=>document.getElementById(id).value='');
+    showM('addOk','');
+    showToast('✓ Product added to Google Sheets!');
+  } catch(e){
+    showM('addErr','❌ '+e.message+'. Make sure your API key is unrestricted or has Sheets API access.');
+  } finally {
+    setBtnLoading(false);
+  }
+}
+function setBtnLoading(on){
+  document.getElementById('addBtn').disabled = on;
+  document.getElementById('addBtnTxt').textContent = on ? 'Syncing…' : 'Save & Sync →';
+}
+
+// ─── DELETE ───────────────────────────────
+async function deleteProduct(i){
+  if(!confirm(`Delete "${products[i].name}"?`)) return;
+  const btn = document.querySelectorAll('.btn-delete')[i];
+  if(btn){ btn.disabled=true; btn.textContent='…'; }
+
+  try {
+    if(cfg.sheetId && cfg.apiKey) await deleteFromSheet(i);
+    products.splice(i,1);
+    localStorage.setItem(CACHE_KEY, JSON.stringify(products));
+    renderGrid(products);
+    renderAdminList();
+    showToast('🗑 Product deleted');
+  } catch(e){
+    showToast('❌ '+e.message);
+    if(btn){ btn.disabled=false; btn.textContent='Delete'; }
+  }
+}
+
+function renderAdminList(){
+  document.getElementById('manageCount').textContent = products.length;
+  const list = document.getElementById('adminProductList');
+  if(!products.length){
+    list.innerHTML='<div class="admin-product-item" style="color:var(--muted);justify-content:center;font-size:0.82rem">No products yet.</div>';
+    return;
+  }
+  list.innerHTML = products.map((p,i)=>`
+    <div class="admin-product-item">
+      <img src="${x(p.image)}" onerror="this.src='https://placehold.co/36x36/1c1c28/888?text=?'"/>
+      <div class="admin-product-info">
+        <div class="name">${x(p.name)}</div>
+        <div class="price">${x(p.price)}</div>
+      </div>
+      <button class="btn-delete" onclick="deleteProduct(${i})">Delete</button>
+    </div>`).join('');
+}
+
+// ─── CONFIG ───────────────────────────────
+function saveConfig(){
+  const sheetId   = document.getElementById('cfgSheetId').value.trim();
+  const apiKey    = document.getElementById('cfgApiKey').value.trim();
+  const sheetName = document.getElementById('cfgSheetName').value.trim() || 'Sheet1';
+  if(!sheetId||!apiKey) return showToast('⚠ Enter both Spreadsheet ID and API Key');
+  cfg = {sheetId, apiKey, sheetName};
+  saveCfg();
+  hide('configSaved');
+  document.getElementById('configSaved').style.display='block';
+  document.getElementById('configBanner').style.display='none';
+  showToast('✓ Config saved — fetching products…');
+  init();
+}
+
+// ════════════════════════════════════════════
+//  UTILS
+// ════════════════════════════════════════════
+function hide(id){ document.getElementById(id).style.display='none'; }
+function showM(id, txt){
+  const el=document.getElementById(id);
+  if(txt) el.textContent=txt;
+  el.style.display='block';
+  setTimeout(()=>el.style.display='none', 6000);
+}
+let _tt;
+function showToast(msg){
+  const t=document.getElementById('toast');
+  t.textContent=msg; t.classList.add('show');
+  clearTimeout(_tt); _tt=setTimeout(()=>t.classList.remove('show'),3200);
+}
+
+// ════════════════════════════════════════════
+//  START
+// ════════════════════════════════════════════
+init();
+</script>
+</body>
+</html>
